@@ -3,9 +3,7 @@
 __author__ = 'mbleda'
 
 import sys, getopt
-from pprint import pprint
 import re
-import os
 
 vcfFile = ''
 mdrFile = ''
@@ -54,24 +52,17 @@ for vcfLine in vcf:
             line2snp[str(lineNum)] = vcfFields[2]
         lineNum += 1
 
-# pprint(line2snp)
-# print line2snp["12847"]
-# for key in line2snp.iteritems():
-#     print key.__class__
-#     break
-
 ## Read MDR file and change line numbers into SNP ids
 #==========================================================
 mdr= open(mdrFile, "r").readlines()
-out = open("fileOut.txt", "w")
+out = open(outFile, "w")
 
 print ("Translating line numbers into SNP ids...")
 for mdrLine in mdr:
     if not mdrLine.startswith("#"):
-        mdrLineFormatted = re.findall(r"[\w]+", mdrLine)
-        print >> out, "%s\t%s\t%s)" %(mdrLineFormatted[0], line2snp[str(mdrLineFormatted[1])], line2snp[str(mdrLineFormatted[2])])
-        # print >> out, "%s\t( %s, %s )\t( %s-%s),\t(%s-%s),\t(%s-%s),\t%s\t%s.%s" %(mdrLineFormatted[0], line2snp[mdrLineFormatted[1]], line2snp[mdrLineFormatted[2]], mdrLineFormatted[3], mdrLineFormatted[4], mdrLineFormatted[5], mdrLineFormatted[6], mdrLineFormatted[7], mdrLineFormatted[8], mdrLineFormatted[9], mdrLineFormatted[10], mdrLineFormatted[11])
+        mdrLineFormatted = re.findall(r"[^\s,]+", mdrLine)
+        arrSize = len(mdrLineFormatted)
+        print >> out, "%s\t( %s , %s )\t%s" %(mdrLineFormatted[0], line2snp[mdrLineFormatted[2]], line2snp[mdrLineFormatted[3]], "\t".join(mdrLineFormatted[6:arrSize]))
     else:
-        print >> out, mdrLine
-
+        print >> out, "%s" %(mdrLine.rstrip())
 out.close()
