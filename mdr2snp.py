@@ -80,6 +80,8 @@ for mdrLine in mdr:
         print >> out, "%s" %(mdrLine.rstrip())
 out.close()
 
+## Create ranked SNP list file (optional)
+#==========================================================
 if outSnpFile != '':
     sortedSnpList = sorted(snpList.items(), key=lambda t: t[1], reverse=True)
 
